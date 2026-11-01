@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Melundo – E-Mail bestätigt</title><meta name="robots" content="noindex"><style>
+:root{--bg:#f7f6fb;--card:#fff;--ink:#1d1b2a;--muted:#5d5a70;--acc:#5b3fd6;--line:#e6e3f0;--warn:#fff4d6;--warnink:#6b4e00}
+@media (prefers-color-scheme:dark){:root{--bg:#121019;--card:#1c1926;--ink:#f1eff8;--muted:#aaa6bd;--acc:#a993ff;--line:#2c2839;--warn:#3a3012;--warnink:#ffe3a1}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+header a{color:var(--acc);text-decoration:none;font-weight:700;font-size:20px}header .lang{font-size:14px;font-weight:600}
+nav{display:flex;flex-wrap:wrap;gap:8px 14px;margin:12px 0 24px;font-size:14px}nav a{color:var(--muted)}nav a[aria-current]{color:var(--acc);font-weight:600}
+h1{font-size:28px;line-height:1.25;margin:0 0 4px}.stand{color:var(--muted);font-size:14px;margin:0 0 20px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0}
+h2{font-size:18px;margin:0 0 8px;overflow-wrap:anywhere}p{margin:0;white-space:pre-line;overflow-wrap:anywhere}
+a{color:var(--acc)}.draft{background:var(--warn);color:var(--warnink);border-radius:12px;padding:12px 14px;font-size:14px}
+.mail{display:inline-block;margin-top:10px;background:var(--acc);color:#fff;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:600}
+ul.list{margin:0;padding-left:20px}footer{margin-top:32px;color:var(--muted);font-size:13px}
+
+.box{text-align:center;padding:28px 20px}.icon{font-size:48px;line-height:1}h1{margin:12px 0 8px}
+.mail{margin-top:18px}.hint{color:var(--muted);font-size:14px;margin-top:14px}</style></head>
+<body><main><header><a href="../">Melundo</a></header>
+<section class="box"><div class="icon" id="icon">✅</div><h1 id="t"></h1><p id="x"></p>
+<a class="mail" id="open" href="de.melundo.app://login-callback/"></a><p class="hint" id="h"></p></section>
+<noscript><p>E-Mail-Adresse bestätigt. Öffne Melundo und melde dich an.</p></noscript>
+<footer><a href="../impressum/">Impressum</a> · <a href="../datenschutz/">Datenschutz</a> · <a href="mailto:melundoAPP@gmail.com">melundoAPP@gmail.com</a></footer>
+</main><script>
+(function(){
+  var en = !/^de/i.test(navigator.language || 'de');
+  var q = new URLSearchParams(location.search), f = new URLSearchParams(location.hash.slice(1));
+  var get = function(k){ return q.get(k) || f.get(k) || ''; };
+  var err = get('error_code') || get('error'), desc = (get('error_description') || '').toLowerCase();
+  var expired = /otp_expired|flow_state_expired/.test(err) || desc.indexOf('expired') >= 0;
+  var recovery = get('type') === 'recovery';
+  var T = en ? {
+    ok:'Email address confirmed', okx:'Your Melundo account is active. Open the app and sign in with your email address and password.',
+    rec:'Set a new password', recx:'Open this link on the phone with Melundo installed to set a new password.',
+    exp:'This link has expired', expx:'It was already used or is too old. In Melundo, tap “Send new link”. If you can already sign in, your address is confirmed.',
+    bad:'This link did not work', badx:'Please open Melundo and sign in. If that does not work, request a new link there.',
+    open:'Open Melundo', hint:'On a computer: simply open Melundo on your phone and sign in there.'
+  } : {
+    ok:'E-Mail-Adresse bestätigt', okx:'Dein Melundo-Konto ist aktiv. Öffne die App und melde dich mit deiner E-Mail-Adresse und deinem Passwort an.',
+    rec:'Neues Passwort festlegen', recx:'Öffne diesen Link auf dem Handy, auf dem Melundo installiert ist, um ein neues Passwort festzulegen.',
+    exp:'Dieser Link ist abgelaufen', expx:'Er wurde schon benutzt oder ist zu alt. Tippe in Melundo auf „Neuen Link senden“. Wenn du dich schon anmelden kannst, ist deine Adresse bestätigt.',
+    bad:'Dieser Link hat nicht funktioniert', badx:'Bitte öffne Melundo und melde dich an. Klappt das nicht, fordere dort einen neuen Link an.',
+    open:'Melundo öffnen', hint:'Am Computer? Öffne Melundo einfach auf deinem Handy und melde dich dort an.'
+  };
+  document.documentElement.lang = en ? 'en' : 'de';
+  var t = err ? (expired ? T.exp : T.bad) : (recovery ? T.rec : T.ok);
+  var x = err ? (expired ? T.expx : T.badx) : (recovery ? T.recx : T.okx);
+  if (err) document.getElementById('icon').textContent = expired ? '⏰' : '⚠️';
+  document.title = 'Melundo – ' + t;
+  document.getElementById('t').textContent = t;
+  document.getElementById('x').textContent = x;
+  var a = document.getElementById('open');
+  a.textContent = T.open;
+  a.href = 'de.melundo.app://login-callback/' + location.search + location.hash;
+  document.getElementById('h').textContent = T.hint;
+})();
+</script></body></html>
